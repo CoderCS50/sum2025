@@ -58,10 +58,18 @@ class Atom {
     }
 }
 
+const point = {
+    x: 0,
+    y: 0
+}
 
+let degrees = 0;
+const generateAtoms = () => {
+    atoms.push(new Atom(canvas.width/2 + (point.x * 200), canvas.height/2 + (point.y * 200)));
+    point.x = Math.cos(degrees/180 * Math.PI);
+    degrees ++;
+    point.y = point.x * point.x;
 
-const generateAtoms = (e) => {
-    atoms.push(new Atom(Math.random() * canvas.width, Math.random() * canvas.height));
     requestAnimationFrame(generateAtoms);
 }
 generateAtoms();
