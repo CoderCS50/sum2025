@@ -1,13 +1,22 @@
 import React, { useState } from "react"; // importing react and useState hook
 import "../css/MovieCard.css"; // importing css file
+import { useMovieContext } from "../contexts/MovieContext"; // importing the movie context
 
 function MovieCard({ movie }) {
+  const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
+  const favorite = isFavorite(movie.id); // checking if the movie is a favorite
+
   const [showOverview, setShowOverview] = useState(false);
   // accepting movie as a prop
   // Destructuring the movie object to extract properties
 
-  function onFavoriteClick() {
-    alert("Favorited: " + movie.title);
+  function onFavoriteClick(e) {
+    e.preventDefault(); // prevent default behavior
+    if (favorite) {
+      removeFromFavorites(movie.id); // remove from favorites
+    } else {
+      addToFavorites(movie); // add to favorites
+    }
   }
   // show movie overview
   function toggleOverview() {
@@ -23,7 +32,10 @@ function MovieCard({ movie }) {
           alt={movie.title}
         />
         <div className="movie-overlay">
-          <button className="favorite-btn" onClick={onFavoriteClick}>
+          <button
+            className={`favorite-btn ${favorite ? "active" : ""}`}
+            onClick={onFavoriteClick}
+          >
             ❤
           </button>
         </div>
@@ -33,8 +45,8 @@ function MovieCard({ movie }) {
         <p>{movie.release_date?.split("-")[0]}</p>
         {showOverview && (
           <p>
-            {movie.overview} <br /> <br /> <strong>Average Rating:{" "}
-            {movie.vote_average?.toFixed(1)}</strong>
+            {movie.overview} <br /> <br />{" "}
+            <strong>Average Rating: {movie.vote_average?.toFixed(1)}</strong>
           </p>
         )}
         <button onClick={toggleOverview} className="overview-btn">
